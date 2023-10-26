@@ -45,6 +45,47 @@ app.get('/result', async (req, res) => {
   return res.status(200).json({ success: successValue });
 });
 
+
+app.get('/autologin', async (req, res) => {
+  const { username, password } = req.query;
+
+  if (!username || !password) {
+    return res.status(400).json({ error: 'Username and password are required.' });
+  }
+
+  const browser = await puppeteer.launch();
+  const page = await browser.newPage();
+
+  try {
+   
+ await page.goto('https://portal.lnct.ac.in/Accsoft2/StudentLogin.aspx');
+
+ await page.type('#ctl00_cph1_txtStuUser', username);
+ await page.type('#ctl00_cph1_txtStuPsw', password);
+ await Promise.all([page.waitForNavigation(), page.click('#ctl00_cph1_btnStuLogin')]);
+
+    const successElement = await page.$('#ctl00_lnct');
+
+    if (successElement) {
+      const successValue = await successElement.evaluate(element => element.value);
+      return res.status(200).json({ success: successValue });
+    } else {
+      return res.status(400).json({ error: 'Login failed. Success element not found.' });
+    }
+  } catch (error) {
+    return res.status(500).json({ error: 'An error occurred during the login process.' });
+  } finally {
+    await browser.close();
+  }
+});
+
+
+
+
+
+
+
+
 const port = 3000; // Change this to your desired port
 app.listen(port, () => {
   console.log(`Web service is running on port ${port}`);
