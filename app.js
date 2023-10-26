@@ -7,23 +7,20 @@ app.get('/result', async (req, res) => {
 
   // Ensure username and password are provided
   if (!username || !password) {
-    return res.status(400).send('Username and password are required.');
+    return res.status(400).json({ error: 'Username and password are required.' });
   }
 
   // Launch a headless browser and run the Puppeteer script
   const browser = await puppeteer.launch();
   const page = await browser.newPage();
 
-  // Your Puppeteer script here, modifying the code to use 'username' and 'password'
 
-  // For example:
- // Navigate to the login page
  await page.goto('https://portal.lnct.ac.in/Accsoft2/StudentLogin.aspx');
 
  // Fill in the login form and submit
- await page.type('#ctl00_cph1_txtStuUser', username);
- await page.type('#ctl00_cph1_txtStuPsw', password);
- await page.click('#ctl00_cph1_btnStuLogin');
+ await page.type('#ctl00_cph1_txtStuUser', '11115022839');
+ await page.type('#ctl00_cph1_txtStuPsw', '11115022839');
+ await Promise.all([page.waitForNavigation(), page.click('#ctl00_cph1_btnStuLogin')]);
 
  await page.waitForXPath('//a[@href="StuAttendanceStatus.aspx"]');
 
@@ -33,6 +30,7 @@ app.get('/result', async (req, res) => {
    await links[0].click();
  } else {
    console.error('Link not found');
+   return res.status(400).json({ error: 'Login failed. Success element not found.' });
  }
 
 
@@ -44,7 +42,7 @@ app.get('/result', async (req, res) => {
   await browser.close();
 
   // Respond with the result directly
-  res.send(successValue);
+  return res.status(200).json({ success: successValue });
 });
 
 const port = 3000; // Change this to your desired port
