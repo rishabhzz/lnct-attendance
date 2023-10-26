@@ -21,8 +21,8 @@ app.get('/result', async (req, res) => {
  await page.goto('https://portal.lnct.ac.in/Accsoft2/StudentLogin.aspx');
 
  // Fill in the login form and submit
- await page.type('#ctl00_cph1_txtStuUser', '11115022839');
- await page.type('#ctl00_cph1_txtStuPsw', '11115022839');
+ await page.type('#ctl00_cph1_txtStuUser', username);
+ await page.type('#ctl00_cph1_txtStuPsw', password);
  await page.click('#ctl00_cph1_btnStuLogin');
 
  await page.waitForXPath('//a[@href="StuAttendanceStatus.aspx"]');
