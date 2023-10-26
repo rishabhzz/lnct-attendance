@@ -2,7 +2,7 @@ const express = require('express');
 const puppeteer = require('puppeteer');
 const app = express();
 
-app.get('/result', async (req, res) => {
+app.get('/attendance', async (req, res) => {
   const { username, password } = req.query;
 
   // Ensure username and password are provided
@@ -46,7 +46,7 @@ app.get('/result', async (req, res) => {
 });
 
 
-app.get('/autologin', async (req, res) => {
+app.get('/login', async (req, res) => {
   const { username, password } = req.query;
 
   if (!username || !password) {
