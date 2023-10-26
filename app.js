@@ -30,6 +30,9 @@ app.get('/attendance', async (req, res) => {
    await links[0].click();
  } else {
    console.error('Link not found');
+     res.header('Access-Control-Allow-Origin', '*');
+    res.header('Access-Control-Allow-Methods', 'GET, POST, OPTIONS');
+    res.header('Access-Control-Allow-Headers', 'Content-Type');
    return res.status(400).json({ error: 'Login failed. Success element not found.' });
  }
 
@@ -42,6 +45,9 @@ app.get('/attendance', async (req, res) => {
   await browser.close();
 
   // Respond with the result directly
+    res.header('Access-Control-Allow-Origin', '*');
+    res.header('Access-Control-Allow-Methods', 'GET, POST, OPTIONS');
+    res.header('Access-Control-Allow-Headers', 'Content-Type');
   return res.status(200).json({ success: successValue });
 });
 
@@ -67,12 +73,21 @@ app.get('/login', async (req, res) => {
     const successElement = await page.$('#ctl00_lnct');
 
     if (successElement) {
+        res.header('Access-Control-Allow-Origin', '*');
+    res.header('Access-Control-Allow-Methods', 'GET, POST, OPTIONS');
+    res.header('Access-Control-Allow-Headers', 'Content-Type');
       const successValue = await successElement.evaluate(element => element.value);
       return res.status(200).json({ success: successValue });
     } else {
+        res.header('Access-Control-Allow-Origin', '*');
+    res.header('Access-Control-Allow-Methods', 'GET, POST, OPTIONS');
+    res.header('Access-Control-Allow-Headers', 'Content-Type');
       return res.status(400).json({ error: 'Login failed. Success element not found.' });
     }
   } catch (error) {
+      res.header('Access-Control-Allow-Origin', '*');
+    res.header('Access-Control-Allow-Methods', 'GET, POST, OPTIONS');
+    res.header('Access-Control-Allow-Headers', 'Content-Type');
     return res.status(500).json({ error: 'An error occurred during the login process.' });
   } finally {
     await browser.close();
