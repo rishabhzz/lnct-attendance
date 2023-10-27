@@ -4,6 +4,7 @@ const app = express();
 
 app.get('/attendance', async (req, res) => {
   const { username, password } = req.query;
+  console.log(" request came to /attendance ");
 
   // Ensure username and password are provided
   if (!username || !password) {
