@@ -101,7 +101,7 @@ app.get('/login', async (req, res) => {
 
  await page.type('#ctl00_cph1_txtStuUser', username);
  await page.type('#ctl00_cph1_txtStuPsw', password);
- await Promise.all([page.waitForNavigation({ timeout: 5000 }), page.click('#ctl00_cph1_btnStuLogin')]);
+ await Promise.all([page.waitForNavigation(), page.click('#ctl00_cph1_btnStuLogin')]);
 
 
  try {
