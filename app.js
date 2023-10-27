@@ -107,9 +107,12 @@ app.get('/login', async (req, res) => {
  try {
   // Check if a specific element is present on the page
    await page.waitForNavigation({ timeout: 5000 });
-  const elementSelector = '#ctl00_cph1_btnStuLogin'; // Replace with the actual selector
-  const elementPresent = await page.waitForSelector(elementSelector, { timeout: 5000 });
+  //const elementSelector = '#ctl00_cph1_btnStuLogin'; // Replace with the actual selector
+  //const elementPresent = await page.waitForSelector(elementSelector, { timeout: 5000 });
+  const elementPresent = await page.waitForSelector('#ctl00_cph1_btnStuLogin');
 
+
+   
   if (elementPresent) {
     console.log('Login failed');
     res.header('Access-Control-Allow-Origin', '*');
