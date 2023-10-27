@@ -93,35 +93,44 @@ app.get('/login', async (req, res) => {
   const browser = await puppeteer.launch();
   const page = await browser.newPage();
 
+
+
   try {
    
  await page.goto('https://portal.lnct.ac.in/Accsoft2/StudentLogin.aspx');
 
  await page.type('#ctl00_cph1_txtStuUser', username);
  await page.type('#ctl00_cph1_txtStuPsw', password);
- await page.click('#ctl00_cph1_btnStuLogin');
+ await Promise.all([page.waitForNavigation({ timeout: 5000 }), page.click('#ctl00_cph1_btnStuLogin')]);
 
 
  try {
-  await page.waitForNavigation({ timeout: 5000 });
-  console.log('Login successful');
+  // Check if a specific element is present on the page
+  const elementSelector = '#ctl00_cph1_btnStuLogin'; // Replace with the actual selector
+  const elementPresent = await page.waitForSelector(elementSelector, { timeout: 5000 });
 
-  //messagesDropdown
-  const successElement = await page.$('#messagesDropdown');
-  res.header('Access-Control-Allow-Origin', '*');
-  res.header('Access-Control-Allow-Methods', 'GET, POST, OPTIONS');
-  res.header('Access-Control-Allow-Headers', 'Content-Type');
-    const successValue = await successElement.evaluate(element => element.textContent);
-    return res.status(200).json({ success: successValue });
-
-
+  if (elementPresent) {
+    console.log('Login failed');
+    res.header('Access-Control-Allow-Origin', '*');
+    res.header('Access-Control-Allow-Methods', 'GET, POST, OPTIONS');
+    res.header('Access-Control-Allow-Headers', 'Content-Type');
+      return res.status(400).json({ error: 'Login failed. Found the login button'});
+  } else {
+    console.log('login success');
+    res.header('Access-Control-Allow-Origin', '*');
+    res.header('Access-Control-Allow-Methods', 'GET, POST, OPTIONS');
+    res.header('Access-Control-Allow-Headers', 'Content-Type');
+     
+      return res.status(200).json({ login: "success" });
+  }
 } catch (error) {
   console.log('Login failed');
   res.header('Access-Control-Allow-Origin', '*');
   res.header('Access-Control-Allow-Methods', 'GET, POST, OPTIONS');
   res.header('Access-Control-Allow-Headers', 'Content-Type');
-    return res.status(400).json({ error: 'Login failed. Success element not found.' });
+    return res.status(400).json({ error: 'Login failed. error occured in try block' });
 }
+
 
 
 
