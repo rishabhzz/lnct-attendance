@@ -37,10 +37,16 @@ app.get('/attendance', async (req, res) => {
  }
 
 
- await page.waitForSelector('#ctl00_ContentPlaceHolder1_txtStudentName');
- const successElement = await page.$('#ctl00_ContentPlaceHolder1_txtStudentName');
+ // await page.waitForSelector('#ctl00_ContentPlaceHolder1_txtStudentName'); 
+ // const successElement = await page.$('#ctl00_ContentPlaceHolder1_txtStudentName');
+ // const successValue = await successElement.evaluate(element => element.value);
 
- const successValue = await successElement.evaluate(element => element.value);
+  //new 
+await page.waitForSelector('#ctl00_ContentPlaceHolder1_lblPer'); 
+ const successElement = await page.$('#ctl00_ContentPlaceHolder1_lblPer');
+ const successValue = await successElement.evaluate(element => element.textContent);
+
+  
   // Close the browser
   await browser.close();
 
