@@ -46,6 +46,9 @@ await page.waitForSelector('#ctl00_ContentPlaceHolder1_lblPer');
  const successElement = await page.$('#ctl00_ContentPlaceHolder1_lblPer');
  const successValue = await successElement.evaluate(element => element.textContent);
 
+  successElement = await page.$('#ctl00_ContentPlaceHolder1_lbltotperiod');
+  successValue += await successElement.evaluate(element => element.textContent);
+
   
   // Close the browser
   await browser.close();
