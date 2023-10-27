@@ -101,20 +101,30 @@ app.get('/login', async (req, res) => {
  await page.type('#ctl00_cph1_txtStuPsw', password);
  await Promise.all([page.waitForNavigation(), page.click('#ctl00_cph1_btnStuLogin')]);
 
-    const successElement = await page.$('#ctl00_lnct');
 
-    if (successElement) {
-        res.header('Access-Control-Allow-Origin', '*');
-    res.header('Access-Control-Allow-Methods', 'GET, POST, OPTIONS');
-    res.header('Access-Control-Allow-Headers', 'Content-Type');
-      const successValue = await successElement.evaluate(element => element.value);
-      return res.status(200).json({ success: successValue });
-    } else {
-        res.header('Access-Control-Allow-Origin', '*');
-    res.header('Access-Control-Allow-Methods', 'GET, POST, OPTIONS');
-    res.header('Access-Control-Allow-Headers', 'Content-Type');
-      return res.status(400).json({ error: 'Login failed. Success element not found.' });
-    }
+ try {
+  await page.waitForNavigation({ timeout: 5000 });
+  console.log('Login successful');
+
+  //messagesDropdown
+  const successElement = await page.$('#messagesDropdown');
+  res.header('Access-Control-Allow-Origin', '*');
+  res.header('Access-Control-Allow-Methods', 'GET, POST, OPTIONS');
+  res.header('Access-Control-Allow-Headers', 'Content-Type');
+    const successValue = await successElement.evaluate(element => element.textContent);
+    return res.status(200).json({ success: successValue });
+
+
+} catch (error) {
+  console.log('Login failed');
+  res.header('Access-Control-Allow-Origin', '*');
+  res.header('Access-Control-Allow-Methods', 'GET, POST, OPTIONS');
+  res.header('Access-Control-Allow-Headers', 'Content-Type');
+    return res.status(400).json({ error: 'Login failed. Success element not found.' });
+}
+
+
+
   } catch (error) {
       res.header('Access-Control-Allow-Origin', '*');
     res.header('Access-Control-Allow-Methods', 'GET, POST, OPTIONS');
