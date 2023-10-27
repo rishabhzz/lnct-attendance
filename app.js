@@ -21,12 +21,12 @@ app.get('/attendance', async (req, res) => {
  // Fill in the login form and submit
  await page.type('#ctl00_cph1_txtStuUser', username);
  await page.type('#ctl00_cph1_txtStuPsw', password);
- await Promise.all([page.waitForNavigation(), page.click('#ctl00_cph1_btnStuLogin')]);
-try{
-  
- await page.waitForXPath('//a[@href="StuAttendanceStatus.aspx"]');
 
- // Click on the link with the specified href value
+
+try{
+    await Promise.all([page.waitForNavigation({timeout : 5000}), page.click('#ctl00_cph1_btnStuLogin')]);
+    console.log("Login Success");
+   await page.waitForXPath('//a[@href="StuAttendanceStatus.aspx"]');
  const links = await page.$x('//a[@href="StuAttendanceStatus.aspx"]');
  if (links.length > 0) {
    await links[0].click();
@@ -39,12 +39,7 @@ try{
  }
 
 
- // await page.waitForSelector('#ctl00_ContentPlaceHolder1_txtStudentName'); 
- // const successElement = await page.$('#ctl00_ContentPlaceHolder1_txtStudentName');
- // const successValue = await successElement.evaluate(element => element.value);
-
-  //new 
-await page.waitForSelector('#ctl00_ContentPlaceHolder1_lblPer'); 
+  await page.waitForSelector('#ctl00_ContentPlaceHolder1_lblPer'); 
  const successElement = await page.$('#ctl00_ContentPlaceHolder1_lblPer');
  const percentage = await successElement.evaluate(element => element.textContent);
 
@@ -56,24 +51,19 @@ await page.waitForSelector('#ctl00_ContentPlaceHolder1_lblPer');
 
  const successElement4 = await page.$('#ctl00_ContentPlaceHolder1_lbltotala');
  const absent = await successElement4.evaluate(element => element.textContent);
-// Close the browser
- 
-
-  // Respond with the result directly
-    res.header('Access-Control-Allow-Origin', '*');
+   res.header('Access-Control-Allow-Origin', '*');
     res.header('Access-Control-Allow-Methods', 'GET, POST, OPTIONS');
     res.header('Access-Control-Allow-Headers', 'Content-Type');
   return res.status(200).json({ total: total, percentage: percentage, present : present, absent: absent  });
- 
-}catch(error){
    
+  }catch(error){
+    console.log("Login failed");
    res.header('Access-Control-Allow-Origin', '*');
     res.header('Access-Control-Allow-Methods', 'GET, POST, OPTIONS');
     res.header('Access-Control-Allow-Headers', 'Content-Type');
  return res.status(500).json({ error: 'An error occurred during the process.' });
-
-  
-}finally{
+   
+  }finally{
 
 await browser.close();
 }
@@ -101,39 +91,21 @@ app.get('/login', async (req, res) => {
 
  await page.type('#ctl00_cph1_txtStuUser', username);
  await page.type('#ctl00_cph1_txtStuPsw', password);
- await page.click('#ctl00_cph1_btnStuLogin');
 
-
- try {
-  // Check if a specific element is present on the page
-   await page.waitForNavigation({ timeout: 5000 });
-  //const elementSelector = '#ctl00_cph1_btnStuLogin'; // Replace with the actual selector
-  //const elementPresent = await page.waitForSelector(elementSelector, { timeout: 5000 });
-  const elementPresent = await page.waitForSelector('#ctl00_cph1_btnStuLogin');
-
-
-   
-  if (elementPresent) {
-    console.log('Login failed');
+  try{
+    await Promise.all([page.waitForNavigation({timeout : 5000}), page.click('#ctl00_cph1_btnStuLogin')]);
+    console.log("Login Success");
     res.header('Access-Control-Allow-Origin', '*');
     res.header('Access-Control-Allow-Methods', 'GET, POST, OPTIONS');
     res.header('Access-Control-Allow-Headers', 'Content-Type');
-      return res.status(400).json({ error: 'Login failed. Found the login button'});
-  } else {
-    console.log('login success');
+    return res.status(200).json({ login: "success" });
+  }catch(error){
+    console.log("Login failed");
     res.header('Access-Control-Allow-Origin', '*');
     res.header('Access-Control-Allow-Methods', 'GET, POST, OPTIONS');
     res.header('Access-Control-Allow-Headers', 'Content-Type');
-     
-      return res.status(200).json({ login: "success" });
+    return res.status(400).json({ error: 'Login failed. No Navigation took place'});
   }
-} catch (error) {
-  console.log('Login suxxxx');
-  res.header('Access-Control-Allow-Origin', '*');
-  res.header('Access-Control-Allow-Methods', 'GET, POST, OPTIONS');
-  res.header('Access-Control-Allow-Headers', 'Content-Type');
-    return res.status(200).json({ login: 'Login Success.' });
-}
 
 
 
