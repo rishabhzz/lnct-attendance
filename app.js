@@ -103,7 +103,7 @@ app.get('/login', async (req, res) => {
 
 
  try {
-  await page.waitForNavigation({ timeout: 5000 });
+  await page.waitForNavigation({ timeout: 10000 });
   console.log('Login successful');
 
   //messagesDropdown
