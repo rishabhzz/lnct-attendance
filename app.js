@@ -21,7 +21,8 @@ app.get('/attendance', async (req, res) => {
  await page.type('#ctl00_cph1_txtStuUser', username);
  await page.type('#ctl00_cph1_txtStuPsw', password);
  await Promise.all([page.waitForNavigation(), page.click('#ctl00_cph1_btnStuLogin')]);
-
+try{
+  
  await page.waitForXPath('//a[@href="StuAttendanceStatus.aspx"]');
 
  // Click on the link with the specified href value
@@ -44,20 +45,40 @@ app.get('/attendance', async (req, res) => {
   //new 
 await page.waitForSelector('#ctl00_ContentPlaceHolder1_lblPer'); 
  const successElement = await page.$('#ctl00_ContentPlaceHolder1_lblPer');
- const successValue = await successElement.evaluate(element => element.textContent);
+ const percentage = await successElement.evaluate(element => element.textContent);
 
-  successElement = await page.$('#ctl00_ContentPlaceHolder1_lbltotperiod');
-  successValue += await successElement.evaluate(element => element.textContent);
+ const successElement2 = await page.$('#ctl00_ContentPlaceHolder1_lbltotperiod');
+ const total = await successElement2.evaluate(element => element.textContent);
 
-  
-  // Close the browser
-  await browser.close();
+ const successElement3 = await page.$('#ctl00_ContentPlaceHolder1_lbltotalp');
+ const present = await successElement3.evaluate(element => element.textContent);
+
+ const successElement4 = await page.$('#ctl00_ContentPlaceHolder1_lbltotala');
+ const absent = await successElement4.evaluate(element => element.textContent);
+// Close the browser
+ 
 
   // Respond with the result directly
     res.header('Access-Control-Allow-Origin', '*');
     res.header('Access-Control-Allow-Methods', 'GET, POST, OPTIONS');
     res.header('Access-Control-Allow-Headers', 'Content-Type');
-  return res.status(200).json({ success: successValue });
+  return res.status(200).json({ total: total, percentage: percentage, present : present, absent: absent  });
+ 
+}catch(error){
+   
+   res.header('Access-Control-Allow-Origin', '*');
+    res.header('Access-Control-Allow-Methods', 'GET, POST, OPTIONS');
+    res.header('Access-Control-Allow-Headers', 'Content-Type');
+ return res.status(500).json({ error: 'An error occurred during the process.' });
+
+  
+}finally{
+
+await browser.close();
+}
+  
+  
+  
 });
 
 
