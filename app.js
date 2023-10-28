@@ -75,6 +75,7 @@ await browser.close();
 
 app.get('/login', async (req, res) => {
   const { username, password } = req.query;
+  console.log("request came to /login");
 
   if (!username || !password) {
     return res.status(400).json({ error: 'Username and password are required.' });
