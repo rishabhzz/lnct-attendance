@@ -94,7 +94,7 @@ app.get('/login', async (req, res) => {
  await page.type('#ctl00_cph1_txtStuPsw', password);
 
   try{
-    await Promise.all([page.waitForNavigation({timeout : 5000}), page.click('#ctl00_cph1_btnStuLogin')]);
+    await Promise.all([page.waitForNavigation(), page.click('#ctl00_cph1_btnStuLogin')]);
     console.log("Login Success");
     res.header('Access-Control-Allow-Origin', '*');
     res.header('Access-Control-Allow-Methods', 'GET, POST, OPTIONS');
