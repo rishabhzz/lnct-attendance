@@ -30,7 +30,7 @@ if(clg == undefined){
 
 try{
     await Promise.all([page.waitForNavigation(), page.click('#ctl00_cph1_btnStuLogin')]);
-    console.log("Login Success");
+    console.log("Login Success for attendance");
    await page.waitForXPath('//a[@href="StuAttendanceStatus.aspx"]');
  const links = await page.$x('//a[@href="StuAttendanceStatus.aspx"]');
  if (links.length > 0) {
