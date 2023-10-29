@@ -3,7 +3,8 @@ const puppeteer = require('puppeteer');
 const app = express();
 
 app.get('/attendance', async (req, res) => {
-  const { username, password } = req.query;
+  const { username, password, clg } = req.query;
+  
   console.log(" request came to /attendance ");
 
   // Ensure username and password are provided
@@ -15,8 +16,12 @@ app.get('/attendance', async (req, res) => {
   const browser = await puppeteer.launch();
   const page = await browser.newPage();
 
+if(clg == undefined){
+  await page.goto('https://portal.lnct.ac.in/Accsoft2/StudentLogin.aspx');
+}else{
+  await page.goto('https://accsoft.lnctu.ac.in/AccSoft2/StudentLogin.aspx');
+}
 
- await page.goto('https://portal.lnct.ac.in/Accsoft2/StudentLogin.aspx');
 
  // Fill in the login form and submit
  await page.type('#ctl00_cph1_txtStuUser', username);
@@ -74,7 +79,7 @@ await browser.close();
 
 
 app.get('/login', async (req, res) => {
-  const { username, password } = req.query;
+  const { username, password, clg } = req.query;
   console.log("request came to /login");
 
   if (!username || !password) {
@@ -87,8 +92,13 @@ app.get('/login', async (req, res) => {
 
 
   try {
+
    
- await page.goto('https://portal.lnct.ac.in/Accsoft2/StudentLogin.aspx');
+if(clg == undefined){
+  await page.goto('https://portal.lnct.ac.in/Accsoft2/StudentLogin.aspx');
+}else{
+  await page.goto('https://accsoft.lnctu.ac.in/AccSoft2/StudentLogin.aspx');
+}
 
  await page.type('#ctl00_cph1_txtStuUser', username);
  await page.type('#ctl00_cph1_txtStuPsw', password);
