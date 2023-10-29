@@ -111,7 +111,7 @@ if(clg == undefined){
     res.header('Access-Control-Allow-Headers', 'Content-Type');
     return res.status(200).json({ login: "success" });
   }catch(error){
-    console.log("Login failed");
+    console.log("Login failed - incorrect creds");
     res.header('Access-Control-Allow-Origin', '*');
     res.header('Access-Control-Allow-Methods', 'GET, POST, OPTIONS');
     res.header('Access-Control-Allow-Headers', 'Content-Type');
