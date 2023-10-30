@@ -6,8 +6,8 @@ const app = express();
 
 
 //rate limitor start
-const rateLimitWindowMs = 30 * 1000; // 1 minute
-const maxRequestsPerWindow = 2;
+const rateLimitWindowMs = 30 * 1000; // 30 secs
+const maxRequestsPerWindow = 1; //1 per request
 const requestCount = {}; 
 
 app.use((req, res, next) => {
