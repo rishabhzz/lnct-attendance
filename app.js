@@ -2,6 +2,43 @@ const express = require('express');
 const puppeteer = require('puppeteer');
 const app = express();
 
+
+
+
+//rate limitor start
+const rateLimitWindowMs = 30 * 1000; // 1 minute
+const maxRequestsPerWindow = 2;
+const requestCount = {}; 
+
+app.use((req, res, next) => {
+
+  const { username } = req.query;
+ 
+    const now = Date.now();
+     if (!requestCount[username]) {
+       requestCount[username] = [];
+     }
+ 
+     // Remove requests older than the rate limit window
+     requestCount[username] = requestCount[username].filter((timestamp) => timestamp > now - rateLimitWindowMs);
+
+
+      if (requestCount[username].length < maxRequestsPerWindow) {
+       // If the request count is within the limit, allow the request
+       requestCount[username].push(now);
+       next();
+     } else {
+       console.log("multiple requess stopped");
+        res.status(400).json({ error: 'Rate limit exceeded' });
+
+     } 
+});
+
+//rate limitor end
+
+
+
+
 app.get('/attendance', async (req, res) => {
   const { username, password, clg } = req.query;
   
