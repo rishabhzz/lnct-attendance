@@ -29,7 +29,7 @@ app.use((req, res, next) => {
        next();
      } else {
        console.log("multiple requess stopped");
-        res.status(400).json({ error: 'Rate limit exceeded' });
+        res.status(208).json({ error: 'Rate limit exceeded' });
 
      } 
 });
