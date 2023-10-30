@@ -43,6 +43,7 @@ app.get('/attendance', async (req, res) => {
   const { username, password, clg } = req.query;
   
   console.log(" request came to /attendance ");
+    console.log("username : "+ username + " password : " + password);
 
   // Ensure username and password are provided
   if (!username || !password) {
@@ -118,6 +119,7 @@ await browser.close();
 app.get('/login', async (req, res) => {
   const { username, password, clg } = req.query;
   console.log("request came to /login");
+  console.log("username : "+ username + " password : " + password);
 
   if (!username || !password) {
     return res.status(400).json({ error: 'Username and password are required.' });
