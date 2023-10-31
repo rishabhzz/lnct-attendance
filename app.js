@@ -176,6 +176,98 @@ if(clg == undefined){
 
 
 
+//subject wise
+
+app.get('/sub', async (req, res) => {
+  const { username, password, clg } = req.query;
+  
+   console.log(" request came to /subject ");
+    console.log("username : "+ username + " password : " + password);
+
+  // Ensure username and password are provided
+  if (!username || !password) {
+    return res.status(400).json({ error: 'Username and password are required.' });
+  }
+
+  // Launch a headless browser and run the Puppeteer script
+  const browser = await puppeteer.launch();
+  const page = await browser.newPage();
+
+if(clg == undefined){
+  await page.goto('https://portal.lnct.ac.in/Accsoft2/StudentLogin.aspx');
+}else{
+  await page.goto('https://accsoft.lnctu.ac.in/AccSoft2/StudentLogin.aspx');
+}
+
+
+ // Fill in the login form and submit
+ await page.type('#ctl00_cph1_txtStuUser', username);
+ await page.type('#ctl00_cph1_txtStuPsw', password);
+
+
+try{
+    await Promise.all([page.waitForNavigation(), page.click('#ctl00_cph1_btnStuLogin')]);
+    console.log("Login Success for subject wise");
+    const link = 'https://portal.lnct.ac.in/Accsoft2/parents/subwiseattn.aspx'
+      await page.goto(link); // Clicking the link by navigating to its URL
+      console.log('Link clicked successfully');
+
+
+      await page.waitForSelector('table#ctl00_ContentPlaceHolder1_grd');
+
+      async function extractTableData(selector) {
+        const tableData = await page.evaluate(selector => {
+          const table = document.querySelector(selector);
+          const rows = Array.from(table.querySelectorAll('tr'));
+    
+          const data = [];
+          for (const row of rows) {
+            const cells = Array.from(row.querySelectorAll('td'));
+            const rowData = cells.map(cell => cell.textContent.trim());
+            data.push(rowData);
+          }
+    
+          return data;
+        }, selector);
+    
+        return tableData;
+      }
+
+
+  const table2Data = await extractTableData('table#ctl00_ContentPlaceHolder1_grd');
+
+
+const rows = table2Data.slice(1).map(row => {
+  return `Subject: ${row[0]} Total: ${row[1]} Attended: ${row[2]}`;
+});
+
+
+   res.header('Access-Control-Allow-Origin', '*');
+    res.header('Access-Control-Allow-Methods', 'GET, POST, OPTIONS');
+    res.header('Access-Control-Allow-Headers', 'Content-Type');
+  return res.status(200).json(rows.join(' \n '));
+
+   
+  }catch(error){
+    console.log("Login failed");
+   res.header('Access-Control-Allow-Origin', '*');
+    res.header('Access-Control-Allow-Methods', 'GET, POST, OPTIONS');
+    res.header('Access-Control-Allow-Headers', 'Content-Type');
+ return res.status(500).json({ error: 'An error occurred during the process.' + error });
+   
+  }finally{
+
+await browser.close();
+}
+  
+  
+  
+});
+
+
+//subject wise end
+
+
 
 const port = 3000; // Change this to your desired port
 app.listen(port, () => {
