@@ -246,7 +246,7 @@ try{
 
 
 const rows = table2Data.slice(1).map(row => {
-  return `👉🏻: ${row[1]} Total: ${row[2]} Attended: ${row[3]}`;
+  return `👉🏻: ${row[1]} \n Total: ${row[2]} \n Attended: ${row[3]}`;
 });
 
 
