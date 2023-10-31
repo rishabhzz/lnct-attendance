@@ -246,14 +246,14 @@ try{
 
 
 const rows = table2Data.slice(1).map(row => {
-  return `Subject: ${row[0]} Total: ${row[1]} Attended: ${row[2]}`;
+  return `Subject: ${row[1]} Total: ${row[2]} Attended: ${row[3]}`;
 });
 
 
    res.header('Access-Control-Allow-Origin', '*');
     res.header('Access-Control-Allow-Methods', 'GET, POST, OPTIONS');
     res.header('Access-Control-Allow-Headers', 'Content-Type');
-  return res.status(200).json(rows.join(' \n '));
+  return res.status(200).json(rows.join('\n \n'));
 
    
   }catch(error){
