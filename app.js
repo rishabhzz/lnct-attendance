@@ -208,9 +208,17 @@ if(clg == undefined){
 try{
     await Promise.all([page.waitForNavigation(), page.click('#ctl00_cph1_btnStuLogin')]);
     console.log("Login Success for subject wise");
-    const link = 'https://portal.lnct.ac.in/Accsoft2/parents/subwiseattn.aspx'
-      await page.goto(link); // Clicking the link by navigating to its URL
-      console.log('Link clicked successfully');
+
+  
+   
+
+   const link = 'https://portal.lnct.ac.in/Accsoft2/parents/subwiseattn.aspx'
+  await page.goto(link);
+  
+
+  
+       // Clicking the link by navigating to its URL
+     // console.log('Link clicked successfully');
 
 
       await page.waitForSelector('table#ctl00_ContentPlaceHolder1_grd');
